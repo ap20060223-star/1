@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>兒童英語伴讀系統：情境模擬與實驗流程</title>
+<style>
+:root{
+  --bg:#f7f6f2;--surface-1:#eceae3;--surface-2:#ffffff;
+  --text-primary:#1f1f1d;--text-secondary:#5f5e5a;
+  --border:rgba(0,0,0,.12);--border-strong:rgba(0,0,0,.28);
+  --bg-accent:#e6f1fb;--text-accent:#185fa5;--border-accent:#85b7eb;
+  --bg-success:#eaf3de;--text-success:#3b6d11;--border-success:#97c459;
+  --text-danger:#a32d2d;--radius:8px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1b1b19;--surface-1:#2a2a27;--surface-2:#242422;
+    --text-primary:#ecebe6;--text-secondary:#a8a79f;
+    --border:rgba(255,255,255,.14);--border-strong:rgba(255,255,255,.3);
+    --bg-accent:#0c447c;--text-accent:#b5d4f4;--border-accent:#378add;
+    --bg-success:#27500a;--text-success:#c0dd97;--border-success:#639922;
+    --text-danger:#f09595;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;font-weight:500;margin:0 0 4px}
+h2{font-size:17px;font-weight:500;margin:0 0 4px}
+p.sub{font-size:13px;color:var(--text-secondary);margin:0 0 16px}
+section{padding-top:8px}
+section+section{margin-top:36px;padding-top:28px;border-top:1px solid var(--border)}
+nav{display:flex;gap:6px;margin:0 0 20px}
+nav a{text-decoration:none}
+button{font:inherit}
+.chip{font-size:13px;padding:6px 12px;border-radius:var(--radius);border:1px solid var(--border-strong);background:transparent;color:var(--text-primary);cursor:pointer;display:inline-block}
+.chip:focus-visible{outline:2px solid var(--text-accent);outline-offset:2px}
+.chip.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.grp{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);margin:6px 0}
+.row .lb{width:84px;flex:none}
+.bar{flex:1;height:8px;border-radius:4px;background:var(--surface-1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--text-accent);transition:width .6s}
+.dim{opacity:.35}
+.scr{background:var(--surface-2);border:1px solid var(--border-strong);border-radius:12px;min-height:180px;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+.btn2{font-size:13px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border-strong)}
+.btn2.hl{background:var(--bg-success);color:var(--text-success);border-color:var(--border-success)}
+.card{width:52px;height:44px;border-radius:8px;border:1px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--surface-1);transition:all .4s}
+.card.m{background:var(--bg-success);color:var(--text-success);border-color:var(--border-success)}
+#log{margin:12px 0;padding:10px 12px;border-radius:var(--radius);background:var(--surface-1);font-size:14px;min-height:46px}
+.h3{font-size:12px;color:var(--text-secondary);margin:14px 0 4px}
+.rw{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:0 0 8px;opacity:.3;transition:opacity .5s,border-color .5s;cursor:pointer;background:var(--surface-2)}
+.rw.on{opacity:1;border-color:var(--border-strong)}
+.rw.cur{border:1.5px solid var(--border-accent)}
+.tt{font-size:14px;font-weight:500;margin:0 0 2px}
+.ds{font-size:12px;color:var(--text-secondary);margin:0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:8px}
+.ca,.cb{border-radius:8px;padding:8px 10px;font-size:12px}
+.ca{background:var(--bg-accent);color:var(--text-accent)}
+.cb{background:var(--bg-success);color:var(--text-success)}
+.dots{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.d{width:16px;height:16px;border-radius:50%;background:var(--surface-1);border:1px solid var(--border-strong);transition:all .6s}
+.d.a{background:var(--text-accent);border-color:var(--text-accent)}
+.d.b{background:var(--text-success);border-color:var(--text-success)}
+.pb{height:6px;border-radius:3px;background:rgba(127,127,127,.2);margin-top:6px;overflow:hidden}
+.pb i{display:block;height:100%;width:0;background:currentColor}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-top:6px;color:var(--text-secondary)}
+.chk b{font-weight:500;color:var(--text-primary);flex:none}
+.ph{height:22px;border:1px dashed var(--border-strong);border-radius:6px;margin-top:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-secondary)}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes sh{0%,100%{opacity:.4}50%{opacity:1}}
+@media (prefers-reduced-motion:no-preference){.scr>*{animation:pop .35s}.ph.s{animation:sh 1.4s infinite}}
+</style>
+</head>
+<body>
+<main>
+<h1>兒童英語伴讀系統</h1>
+<p class="sub">依學習者的反應判斷何時引導，並更新單字掌握度。畫面中的百分比、秒數與反應時間皆為示意值，不是實驗數據。</p>
+<nav aria-label="章節">
+  <a class="chip" href="#sim">情境模擬</a>
+  <a class="chip" href="#exp">實驗流程</a>
+</nav>
+
+<section id="sim">
+<h2>情境模擬</h2>
+<p class="sub">切換組別與情境，看系統何時詢問、如何調整。</p>
+<div class="grp" role="group" aria-label="實驗組別">
+  <button class="chip on" data-g="A">A 組：作答與操作紀錄</button>
+  <button class="chip" data-g="B">B 組：再加影像與語音</button>
+</div>
+<div class="grp" role="group" aria-label="情境">
+  <button class="chip on" data-s="1">情境一：卡關</button>
+  <button class="chip" data-s="2">情境二：換玩法</button>
+  <button class="chip" data-s="3">情境三：疲累</button>
+  <button class="chip" id="replay">重播</button>
+</div>
+<div class="scr" id="scr" aria-live="polite"></div>
+<div style="margin-top:12px">
+  <div class="row"><span class="lb">停頓時間</span><div class="bar"><i id="b1"></i></div></div>
+  <div class="row"><span class="lb">重播示範音</span><div class="bar"><i id="b2"></i></div><span id="n2" style="width:36px">0 次</span></div>
+  <div class="row" id="r3"><span class="lb">影像與語音</span><div class="bar"><i id="b3"></i></div></div>
+</div>
+<div id="log" aria-live="polite"></div>
+<div class="h3">知識追蹤：單字掌握度</div>
+<div id="mast"></div>
+</section>
+
+<section id="exp">
+<h2>實驗流程</h2>
+<p class="sub">對照實驗從分組到比較的步驟。點任一步驟可跳到該處。</p>
+<div class="grp"><button class="chip" id="rp">重播</button></div>
+
+<div class="rw" data-i="0"><p class="tt">1 分組</p><p class="ds">相同教材、引導選項與練習時間，學童隨機分成兩組。</p>
+<div class="dots" id="dots"></div></div>
+
+<div class="rw" data-i="1"><p class="tt">2 無提示前測</p><p class="ds">兩組都不給提示，記錄單字與句型的起始程度。</p></div>
+
+<div class="rw" data-i="2"><p class="tt">3 練習期</p><p class="ds">依各組訊號觸發引導。</p>
+<div class="two"><div class="ca">A 組<br>作答與操作紀錄<div class="pb" style="color:var(--text-accent)"><i id="pa"></i></div></div>
+<div class="cb">B 組<br>再加入影像與語音<div class="pb" style="color:var(--text-success)"><i id="pbb"></i></div></div></div></div>
+
+<div class="rw" data-i="3"><p class="tt">4 觀察紀錄與簡短回饋</p>
+<div class="chk"><b>過早提醒</b><span>孩子仍能自行作答，系統卻已介入。</span></div>
+<div class="chk"><b>錯過協助</b><span>孩子卡關時，系統沒有提供協助。</span></div>
+<div class="chk"><b>簡短回饋</b><span>學童用簡短回饋說出使用感受。</span></div></div>
+
+<div class="rw" data-i="4"><p class="tt">5 無提示後測</p><p class="ds">題目條件與前測一致，同樣不給提示。</p></div>
+
+<div class="rw" data-i="5"><p class="tt">6 比較進步幅度</p><p class="ds">各組後測減前測，再比較兩組。</p>
+<div class="two"><div><div style="font-size:12px;color:var(--text-accent)">A 組進步幅度</div><div class="ph" id="h1">待實驗結果</div></div>
+<div><div style="font-size:12px;color:var(--text-success)">B 組進步幅度</div><div class="ph" id="h2">待實驗結果</div></div></div>
+<p class="ds" style="margin-top:8px">結果用來調整提示時機與引導方式，並評估能否延伸到其他語言教材與自主學習情境。</p></div>
+</section>
+</main>
+
+<script>
+(function(){
+var W=[['elephant',30],['window',40],['banana',50],['cat',70]];
+var grp='A',sc=1,tok=0;
+var $=function(i){return document.getElementById(i)};
+function sl(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function mast(){ $('mast').innerHTML=W.map(function(w,i){return '<div class="row"><span class="lb">'+w[0]+'</span><div class="bar"><i id="m'+i+'" style="width:'+w[1]+'%"></i></div><span id="mv'+i+'" style="width:36px">'+w[1]+'%</span></div>'}).join('')}
+function setM(i,v){W[i][1]=v;$('m'+i).style.width=v+'%';$('mv'+i).textContent=v+'%'}
+function bars(p,r,v){$('b1').style.width=p+'%';$('b2').style.width=Math.min(r*25,100)+'%';$('n2').textContent=r+' 次';$('b3').style.width=(grp==='B'?v:0)+'%'}
+function log(t){$('log').textContent=t}
+function word(w,x){$('scr').innerHTML='<div style="font-size:28px;font-weight:500">'+w+'</div><div style="font-size:13px;color:var(--text-secondary)">示範音'+(x?' · '+x:'')+'</div>'}
+function ask(q,y,n){$('scr').innerHTML='<div style="font-size:15px">'+q+'</div><div style="display:flex;gap:8px"><span class="btn2 hl">'+y+'</span><span class="btn2">'+n+'</span></div>'}
+function say(h){$('scr').innerHTML=h}
+function ok(t){say('<div style="font-size:18px;color:var(--text-success)">✓ '+t+'</div>')}
+function steps(){
+ var B=grp==='B';
+ if(sc===1)return [
+  [function(){bars(0,0,0);word('elephant');log('孩子開始讀 elephant。')},1200],
+  [function(){bars(25,0,B?15:0);log('停頓稍久，但仍在自行嘗試，先不打擾。')},1700],
+  [function(){bars(85,1,B?60:0);log(B?'停頓拉長、重播示範音，語音也顯得猶豫，判斷可能卡關。':'停頓拉長、重播示範音，判斷可能卡關。')},900],
+  [function(){bars(85,2,B?60:0)},700],
+  [function(){bars(85,3,B?60:0)},900],
+  [function(){ask('需要圖片提示嗎？','要','不用');log('先詢問，不直接給答案。')},1900],
+  [function(){say('<div style="width:120px;height:70px;border-radius:12px;background:var(--bg-accent);color:var(--text-accent);display:flex;align-items:center;justify-content:center;font-size:13px">圖片提示：大象</div><div style="font-size:13px;color:var(--text-secondary)">elephant</div>');log('孩子選「要」，顯示圖片提示。')},1900],
+  [function(){ok('elephant');bars(10,0,B?10:0);setM(0,55);log('答對，更新知識追蹤。')},1800]
+ ];
+ if(sc===2)return [
+  [function(){bars(0,0,0);word('window');log('孩子練習 window。')},1200],
+  [function(){say('<div style="font-size:22px;color:var(--text-danger)">window ✕ ✕</div><div style="font-size:13px;color:var(--text-secondary)">連續兩次作答未通過</div>');bars(60,1,B?55:0);log(B?'連續失誤，操作變慢，語音出現嘆氣。':'連續失誤，操作變慢。')},2000],
+  [function(){ask('想換個方式練習嗎？','卡牌配對','繼續原本的');log('提供選項，由孩子決定。')},1900],
+  [function(){var h='<div style="display:grid;grid-template-columns:repeat(3,52px);gap:8px">';for(var i=0;i<6;i++)h+='<div class="card" id="c'+i+'">?</div>';say(h+'</div>');log('同一組單字改成卡牌配對。')},1200],
+  [function(){['window','窗戶'].forEach(function(t,i){var c=$('c'+i);c.textContent=t;c.className='card m'})},900],
+  [function(){['door','門'].forEach(function(t,i){var c=$('c'+(i+2));c.textContent=t;c.className='card m'});bars(15,0,B?10:0);setM(1,58);log('配對完成，window 掌握度更新。')},1800]
+ ];
+ return [
+  [function(){bars(0,0,0);word('banana');log('練習已進行一段時間。')},1200],
+  [function(){bars(70,1,B?80:0);log(B?'打哈欠、視線偏離，反應也變慢，判斷可能累了。':'作答間隔變長、點擊變慢，判斷可能累了。')},2000],
+  [function(){ask('先休息一下嗎？','休息','再試一題');log('先詢問，是否暫停由孩子決定。')},1900],
+  [function(){say('<div style="font-size:22px">休息中 3</div>');bars(30,0,B?20:0)},800],
+  [function(){say('<div style="font-size:22px">休息中 2</div>')},800],
+  [function(){say('<div style="font-size:22px">休息中 1</div>')},800],
+  [function(){word('cat','較簡單的同類題');bars(5,0,B?5:0);log('休息後，從較簡單的同類題重新開始。')},1900],
+  [function(){ok('cat');setM(3,82);log('答對，更新知識追蹤。')},1800]
+ ];
+}
+async function run(){
+ var my=++tok;
+ W=[['elephant',30],['window',40],['banana',50],['cat',70]];mast();
+ $('r3').className='row'+(grp==='B'?'':' dim');
+ bars(0,0,0);
+ var st=steps();
+ for(var i=0;i<st.length;i++){ if(my!==tok)return; st[i][0](); await sl(st[i][1]); }
+}
+document.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){document.querySelectorAll('[data-g]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');grp=b.dataset.g;run()}});
+document.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){document.querySelectorAll('[data-s]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');sc=+b.dataset.s;run()}});
+$('replay').onclick=run;
+run();
+})();
+
+(function(){
+var tok=0,started=false,rows=document.querySelectorAll('.rw');
+var $=function(i){return document.getElementById(i)};
+function sl(m){return new Promise(function(r){setTimeout(r,m)})}
+function dots(){var h='';for(var i=0;i<8;i++)h+='<span class="d"></span>';$('dots').innerHTML=h}
+function show(n){rows.forEach(function(r,i){r.classList.toggle('on',i<=n);r.classList.toggle('cur',i===n)})}
+async function enter(n,my){
+ show(n);
+ if(n===0){dots();await sl(700);var d=document.querySelectorAll('.d');for(var i=0;i<d.length;i++){if(my!==tok)return;d[i].className='d '+(i%2?'b':'a');await sl(250)}}
+ if(n===2){var a=$('pa'),b=$('pbb');a.style.transition=b.style.transition='none';a.style.width=b.style.width='0';await sl(50);a.style.transition=b.style.transition='width 2.2s linear';a.style.width=b.style.width='100%'}
+ if(n===5){$('h1').classList.add('s');$('h2').classList.add('s')}
+}
+async function run(){
+ var my=++tok;
+ $('h1').classList.remove('s');$('h2').classList.remove('s');
+ show(-1);await sl(300);
+ for(var i=0;i<rows.length;i++){
+  if(my!==tok)return;
+  await enter(i,my);
+  await sl(i===2?2600:i===0?900:1700);
+ }
+}
+rows.forEach(function(r){r.onclick=function(){tok++;enter(+r.dataset.i,tok)}});
+$('rp').onclick=run;
+show(-1);
+if('IntersectionObserver' in window){
+ new IntersectionObserver(function(es,ob){if(es[0].isIntersecting&&!started){started=true;ob.disconnect();run()}},{threshold:.2}).observe($('exp'));
+}else{run()}
+})();
+</script>
+</body>
+</html>
